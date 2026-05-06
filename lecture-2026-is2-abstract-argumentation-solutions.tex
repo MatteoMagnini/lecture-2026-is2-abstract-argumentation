@@ -1,0 +1,279 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{tikz}
+
+\title{
+    Intelligent System 2\\
+    Tutorial week 11: Abstract Argumentation\\
+    \textbf{Solutions}
+}
+
+\author{
+    Matteo Magnini\\
+    \href{mailto:matteo.magnini@uni.lu}{matteo.magnini@uni.lu}
+}
+
+\date{
+    6 May, 2026
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Solutions}
+
+\subsection{Exercise 1}
+
+\textbf{Recall:} A set is conflict-free iff no arguments in it attack each other.
+
+Attacks:
+\[
+a \leftrightarrow b,\quad b \to c,\quad c \leftrightarrow d
+\]
+
+\textbf{Conflict-free sets:}
+\[
+\emptyset,\ \{a\},\ \{b\},\ \{c\},\ \{d\},\ \{a,c\},\ \{a,d\},\ \{b,d\}
+\]
+
+\textbf{Maximal (naive candidates):}
+\[
+\{a,c\},\ \{a,d\},\ \{b,d\}
+\]
+
+These are maximal because adding any other argument introduces a conflict.
+
+\subsection{Exercise 2}
+
+\textbf{Naive extensions = maximal conflict-free sets:}
+\[
+\{a,c\},\ \{a,d\},\ \{b,d\}
+\]
+
+\textbf{Example non-naive:}
+\[
+\{a\}
+\]
+It is conflict-free but not maximal (can be extended to $\{a,c\}$).
+
+\subsection{Exercise 3}
+
+\textbf{Recall:} $E$ defends $a$ if for every attacker $b \to a$, there exists $c \in E$ such that $c \to b$.
+
+Attacks:
+\[
+b \to a,\quad c \to b,\quad d \to c
+\]
+
+\begin{itemize}
+    \item $\{a\}$:
+    $a$ is attacked by $b$, but $\{a\}$ does not attack $b$ $\Rightarrow$ not defended.
+
+    \item $\{c\}$:
+    $c$ is attacked by $d$, but $\{c\}$ does not attack $d$ $\Rightarrow$ not defended.
+\end{itemize}
+
+\textbf{Admissible sets:}
+
+\[
+\emptyset,\ \{d\}
+\]
+
+Explanation:
+\begin{itemize}
+    \item $\emptyset$: trivially admissible
+    \item $\{d\}$: conflict-free and has no attackers
+\end{itemize}
+
+\subsection{Exercise 4}
+
+\textbf{Recall:} Complete = admissible + contains all defended arguments.
+
+Admissible sets:
+\[
+\emptyset,\ \{d\}
+\]
+
+\textbf{Check completeness:}
+
+\begin{itemize}
+    \item $\emptyset$:
+    does not defend any argument $\Rightarrow$ complete
+
+    \item $\{d\}$:
+    $d$ has no attackers, so it is trivially defended.
+
+    However, $\{d\}$ also defends $b$:
+    \[
+    c \to b \quad \text{and} \quad d \to c
+    \]
+    hence $d$ attacks all attackers of $b$.
+
+    Therefore, $\{d\}$ defends $b$ but $b \notin \{d\}$.
+
+    $\Rightarrow$ $\{d\}$ does \textbf{not} contain all the arguments it defends.
+
+    $\Rightarrow$ $\{d\}$ is \textbf{not} complete.
+\end{itemize}
+
+\textbf{Conclusion:}
+\[
+\emptyset
+\]
+is the only complete extension.
+
+\subsection{Exercise 5}
+
+Attacks:
+\[
+b \to a,\quad c \to b,\quad d \to c
+\]
+
+\textbf{Grounded procedure (as in the slides):}
+
+\begin{itemize}
+    \item Step 0: all arguments are marked \textbf{undecided}
+
+    \item Step 1: mark as \textbf{accepted (green)} any argument not attacked by a green or undecided argument
+
+    The only such argument is:
+    \[
+    d
+    \]
+
+    \item Step 2: mark as \textbf{rejected (red)} any argument attacked by a green argument
+
+    Since $d \to c$, we mark:
+    \[
+    c \text{ as rejected}
+    \]
+
+    \item Step 3: repeat Step 1
+
+    Now, $b$ is attacked only by $c$, which is rejected, hence it is not attacked by any green or undecided argument.
+
+    Therefore:
+    \[
+    b \text{ is accepted}
+    \]
+
+    \item Step 4: apply Step 2 again
+
+    Since $b \to a$, we mark:
+    \[
+    a \text{ as rejected}
+    \]
+\end{itemize}
+
+\textbf{Final labelling:}
+\[
+\text{accepted: } \{d, b\}, \quad
+\text{rejected: } \{c, a\}
+\]
+
+\textbf{Grounded extension:}
+\[
+\{d, b\}
+\]
+
+\textbf{Conclusion:} the grounded extension is not empty.
+
+\subsection{Exercise 6}
+
+Attacks:
+\[
+a \leftrightarrow b,\quad c \to b
+\]
+
+\textbf{Complete extensions:}
+\[
+\emptyset,\ \{a\},\ \{a,c\}
+\]
+
+\textbf{Preferred (maximal complete):}
+\[
+\{a,c\}
+\]
+
+\textbf{Grounded:}
+\[
+\emptyset
+\]
+
+\textbf{Observation:}
+Preferred $\neq$ grounded.
+
+\subsection{Exercise 7}
+
+Cycle:
+\[
+a \to b \to c \to a
+\]
+
+\textbf{Stable condition:}
+Must attack all arguments outside the set.
+
+Try candidates:
+\begin{itemize}
+    \item $\{a\}$: does not attack $c$
+    \item $\{b\}$: does not attack $a$
+    \item $\{c\}$: does not attack $b$
+\end{itemize}
+
+\textbf{Conclusion:}
+No stable extension exists.
+
+\subsection{Exercise 8}
+
+Attacks:
+\[
+a \to b,\quad b \leftrightarrow c,\quad d \to a,\quad e \to c
+\]
+
+\textbf{Naive:}
+\[
+\{a,c\},\ \{d,b\},\ \{d,c\},\ \{a,e\}
+\]
+
+\textbf{Admissible (example):}
+\[
+\{d\},\ \{e\}
+\]
+
+\textbf{Complete (example):}
+\[
+\{d\}
+\]
+
+\textbf{Grounded:}
+Start with unattacked:
+\[
+d, e
+\]
+Then propagate:
+\[
+\{d,e\}
+\]
+
+\textbf{Preferred (example):}
+\[
+\{d,e\}
+\]
+
+\textbf{Stable (check):}
+\[
+\{d,e\}
+\]
+attacks $a$ and $c$, but not $b$ $\Rightarrow$ not stable
+
+Try $\{a,e\}$:
+attacks $b$ and $c$ $\Rightarrow$ stable
+
+\textbf{Conclusion:}
+All semantics differ.
+
+\end{document}
