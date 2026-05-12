@@ -80,13 +80,14 @@ b \to a,\quad c \to b,\quad d \to c
 \textbf{Admissible sets:}
 
 \[
-\emptyset,\ \{d\}
+\emptyset,\ \{d\},\ \{b, d\}
 \]
 
 Explanation:
 \begin{itemize}
     \item $\emptyset$: trivially admissible
     \item $\{d\}$: conflict-free and has no attackers
+    \item $\{b, d\}$: conflict-free, $b$ is attacked by $c$, but $d$ attacks $c$, hence $b$ is defended by $\{b,d\}$; $d$ has no attackers
 \end{itemize}
 
 \subsection{Exercise 4}
@@ -95,7 +96,7 @@ Explanation:
 
 Admissible sets:
 \[
-\emptyset,\ \{d\}
+\emptyset,\ \{d\},\ \{b, d\}
 \]
 
 \textbf{Check completeness:}
@@ -121,10 +122,11 @@ Admissible sets:
 \end{itemize}
 
 \textbf{Conclusion:}
+
 \[
-\emptyset
+    \emptyset,\ \{b, d\}
 \]
-is the only complete extension.
+are the complete extensions.
 
 \subsection{Exercise 5}
 
@@ -234,46 +236,210 @@ Attacks:
 a \to b,\quad b \leftrightarrow c,\quad d \to a,\quad e \to c
 \]
 
-\textbf{Naive:}
+\textbf{Step 1: Conflict-free sets}
+
+Recall: a set is conflict-free iff no two arguments in the set attack each other.
+
+The conflict-free sets are:
 \[
-\{a,c\},\ \{d,b\},\ \{d,c\},\ \{a,e\}
+\emptyset,
+\{a\},
+\{b\},
+\{c\},
+\{d\},
+\{e\},
+\{a,c\},
+\{a,e\},
+\{b,d\},
+\{b,e\},
+\{c,d\},
+\{d,e\},
+\{b,d,e\}
 \]
 
-\textbf{Admissible (example):}
+\textbf{Naive extensions}
+
+Naive extensions are the $\subseteq$-maximal conflict-free sets.
+
+We check which conflict-free sets cannot be extended further:
+
 \[
-\{d\},\ \{e\}
+\{a,c\},\quad
+\{a,e\},\quad
+\{c,d\},\quad
+\{b,d,e\}
 \]
 
-\textbf{Complete (example):}
+Hence:
 \[
-\{d\}
+\textit{naive}(AF)=
+\{
+\{a,c\},
+\{a,e\},
+\{c,d\},
+\{b,d,e\}
+\}
 \]
 
-\textbf{Grounded:}
-Start with unattacked:
+\textbf{Step 2: Admissible sets}
+
+Recall: an admissible set is conflict-free and defends all its arguments.
+
+\begin{itemize}
+    \item $\emptyset$ is trivially admissible.
+
+    \item $\{d\}$ is admissible since $d$ has no attackers.
+
+    \item $\{e\}$ is admissible since $e$ has no attackers.
+
+    \item $\{d,e\}$ is admissible since neither $d$ nor $e$ is attacked.
+
+    \item $\{b,d,e\}$:
+    \begin{itemize}
+        \item $b$ is attacked by $a$ and $c$
+        \item $d$ attacks $a$
+        \item $e$ attacks $c$
+    \end{itemize}
+    hence all attackers of $b$ are counterattacked.
+    Therefore:
+    \[
+    \{b,d,e\}
+    \]
+    is admissible.
+\end{itemize}
+
+Thus:
 \[
-d, e
-\]
-Then propagate:
-\[
-\{d,e\}
+\textit{adm}(AF)=
+\{
+\emptyset,
+\{d\},
+\{e\},
+\{d,e\},
+\{b,d,e\}
+\}
 \]
 
-\textbf{Preferred (example):}
+\textbf{Step 3: Complete extensions}
+
+Recall: a complete extension is an admissible set containing all arguments it defends.
+
+\begin{itemize}
+    \item $\emptyset$ is not complete:
+    since $d$ and $e$ are unattacked, $\emptyset$ defends them vacuously,
+    but does not contain them.
+
+    \item $\{d\}$ is not complete:
+    it also defends $e$ vacuously, but does not contain $e$.
+
+    \item $\{e\}$ is not complete:
+    symmetrically, it defends $d$ but does not contain it.
+
+    \item $\{d,e\}$ is not complete:
+    it defends $b$ because:
+    \[
+    d \to a \to b
+    \]
+    and
+    \[
+    e \to c \to b
+    \]
+    but $b \notin \{d,e\}$.
+
+    \item $\{b,d,e\}$:
+    \begin{itemize}
+        \item admissible
+        \item contains all arguments it defends
+    \end{itemize}
+    hence complete.
+\end{itemize}
+
+Therefore:
 \[
-\{d,e\}
+\textit{comp}(AF)=
+\{
+\{b,d,e\}
+\}
 \]
 
-\textbf{Stable (check):}
+\textbf{Grounded extension}
+
+The grounded extension is the $\subseteq$-minimal complete extension.
+
+Since there is only one complete extension:
 \[
-\{d,e\}
+\boxed{
+\textit{grounded}(AF)=\{b,d,e\}
+}
 \]
-attacks $a$ and $c$, but not $b$ $\Rightarrow$ not stable
 
-Try $\{a,e\}$:
-attacks $b$ and $c$ $\Rightarrow$ stable
+\textbf{Preferred extension}
 
-\textbf{Conclusion:}
-All semantics differ.
+Preferred extensions are the $\subseteq$-maximal complete extensions.
+
+Again, since there is only one complete extension:
+\[
+\boxed{
+\textit{pref}(AF)=\{b,d,e\}
+}
+\]
+
+\textbf{Stable extension}
+
+Recall: a stable extension must:
+\begin{itemize}
+    \item be conflict-free
+    \item attack every argument outside the set
+\end{itemize}
+
+Consider:
+\[
+\{b,d,e\}
+\]
+
+Arguments outside the set:
+\[
+\{a,c\}
+\]
+
+We have:
+\[
+d \to a
+\]
+and
+\[
+e \to c
+\]
+
+Hence every outside argument is attacked.
+
+Therefore:
+\[
+\boxed{
+\textit{stable}(AF)=\{b,d,e\}
+}
+\]
+
+\textbf{Final observation}
+
+In this framework:
+\[
+\textit{grounded}(AF)
+=
+\textit{pref}(AF)
+=
+\textit{stable}(AF)
+=
+\{b,d,e\}
+\]
+
+while naive semantics additionally accepts:
+\[
+\{a,c\},\quad
+\{a,e\},\quad
+\{c,d\}
+\]
+
+showing that naive semantics may accept sets that are not admissible.
 
 \end{document}
